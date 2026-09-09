@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#dff3ff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Hora Saúde">
+<meta name="format-detection" content="telephone=no">
+<title>Hora Saúde - Recibos</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+:root{
+  --navy:#123f72;
+  --blue:#1d6ca6;
+  --cyan:#1aada7;
+  --sky:#eaf7ff;
+  --sky2:#dff2ff;
+  --card:#ffffff;
+  --text:#17324d;
+  --muted:#6a7f92;
+  --line:#cfe4f2;
+  --danger:#b42318;
+  --shadow:0 14px 42px rgba(21,69,108,.12);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#e9f7ff 0%,#f7fbff 54%,#edf8ff 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.app{width:min(640px,100%);margin:0 auto;padding:18px 15px 30px}
+.brand{text-align:center;padding:8px 0 16px}
+.brand img{width:155px;max-width:45vw;height:auto;display:block;margin:0 auto 10px;filter:drop-shadow(0 6px 12px rgba(21,89,129,.12))}
+.brand h1{font-size:26px;line-height:1.1;margin:0;color:var(--navy);letter-spacing:-.02em}
+.brand p{margin:7px 0 0;font-size:14px;color:var(--muted)}
+.card{background:rgba(255,255,255,.94);border:1px solid rgba(182,217,239,.9);box-shadow:var(--shadow);border-radius:24px;padding:18px;backdrop-filter:blur(10px)}
+.field{margin-bottom:15px}
+.field:last-of-type{margin-bottom:0}
+label,.field-title{display:block;font-size:13px;font-weight:800;color:#274b69;margin:0 0 7px}
+input,textarea{width:100%;border:1px solid var(--line);background:#fbfdff;border-radius:14px;padding:14px 15px;font:inherit;font-size:17px;color:var(--text);outline:none;box-shadow:inset 0 1px 2px rgba(16,68,105,.03)}
+textarea{min-height:92px;resize:vertical;line-height:1.4}
+input:focus,textarea:focus{border-color:#63b7e5;box-shadow:0 0 0 4px rgba(63,183,229,.14)}
+.value-wrap{position:relative}.value-prefix{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:17px;font-weight:800;color:var(--navy);pointer-events:none}.value-wrap input{padding-left:47px}
+.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pay-option input{position:absolute;opacity:0;pointer-events:none}.pay-option label{margin:0;min-height:58px;border:1px solid var(--line);border-radius:15px;background:#fbfdff;display:flex;align-items:center;justify-content:center;gap:9px;font-size:16px;font-weight:800;color:#31516d;cursor:pointer;transition:.15s}.pay-option input:checked+label{border-color:#2d93cf;background:#e6f5ff;color:#135d92;box-shadow:0 0 0 3px rgba(45,147,207,.10)}
+.pay-icon{font-size:20px;line-height:1}
+.extenso{margin-top:7px;background:#f1f9ff;border:1px dashed #c5e3f4;border-radius:12px;padding:9px 11px;font-size:13px;color:#476781;line-height:1.35;min-height:37px}
+.actions{display:grid;gap:10px;margin-top:19px}
+button{appearance:none;border:0;border-radius:15px;padding:15px 16px;font:inherit;font-size:16px;font-weight:850;cursor:pointer;transition:transform .08s,opacity .15s;min-height:53px}
+button:active{transform:scale(.985)}
+.primary{background:linear-gradient(135deg,#195c94,#124b80);color:white;box-shadow:0 8px 22px rgba(18,75,128,.22)}
+.secondary{background:#edf4f8;color:#38536a}
+.status{min-height:21px;text-align:center;padding-top:8px;font-size:13px;font-weight:750;color:#19704e}
+.install-help{margin:14px 2px 0;padding:13px 14px;border-radius:15px;background:rgba(255,255,255,.62);border:1px solid rgba(183,218,239,.75);font-size:13px;line-height:1.45;color:#557188;text-align:center}
+.install-help strong{color:#28597d}
+.footer{text-align:center;margin-top:19px;font-size:12px;color:#7990a3}
+.hidden{display:none!important}
+@media (min-width:600px){.app{padding-top:28px}.card{padding:24px}.two{display:grid;grid-template-columns:1fr 1fr;gap:13px}.two .field{margin-bottom:15px}}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="brand">
+    <img src="assets/logo-hora-saude.png" alt="Hora Saúde">
+    <h1>Gerador de Recibo</h1>
+    <p>Preencha os dados e gere o PDF pronto para enviar.</p>
+  </header>
+
+  <section class="card" aria-label="Dados do recibo">
+    <div class="two">
+      <div class="field">
+        <label for="data">Data</label>
+        <input id="data" type="date">
+      </div>
+      <div class="field">
+        <label for="nome">Nome da pessoa</label>
+        <input id="nome" type="text" autocomplete="name" placeholder="Nome completo">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="valor">Valor</label>
+      <div class="value-wrap">
+        <span class="value-prefix">R$</span>
+        <input id="valor" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off">
+      </div>
+      <div class="extenso" id="extenso">zero reais</div>
+    </div>
+
+    <div class="field">
+      <label for="referente">Referente a</label>
+      <textarea id="referente" placeholder="Ex.: atendimento, consulta, serviço realizado..."></textarea>
+    </div>
+
+    <div class="field">
+      <span class="field-title">Forma de pagamento</span>
+      <div class="pay-grid">
+        <div class="pay-option">
+          <input id="pagPix" type="radio" name="pagamento" value="PIX" checked>
+          <label for="pagPix"><span class="pay-icon">◆</span> PIX</label>
+        </div>
+        <div class="pay-option">
+          <input id="pagDinheiro" type="radio" name="pagamento" value="Dinheiro">
+          <label for="pagDinheiro"><span class="pay-icon">R$</span> Dinheiro</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="gerarPdf">Gerar PDF</button>
+      <button class="secondary" id="limpar">Limpar campos</button>
+    </div>
+    <div class="status" id="status"></div>
+  </section>
+
+  <div class="install-help" id="installHelp">
+    Para instalar no iPhone: abra pelo <strong>Safari</strong> → toque em <strong>Compartilhar</strong> → <strong>Adicionar à Tela de Início</strong>.
+  </div>
+  <div class="footer">Hora Saúde • Recibos</div>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const dataEl = $('data');
+const nomeEl = $('nome');
+const valorEl = $('valor');
+const referenteEl = $('referente');
+const statusEl = $('status');
+const extensoEl = $('extenso');
+
+function hojeISO(){
+  const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function dataBR(iso){
+  if(!iso)return '';
+  const [y,m,d]=iso.split('-');
+  return `${d}/${m}/${y}`;
+}
+function parseValorBR(txt){
+  let s=String(txt||'').trim().replace(/R\$/gi,'').replace(/\s/g,'');
+  if(!s)return 0;
+  if(s.includes(',')) s=s.replace(/\./g,'').replace(',','.');
+  const n=Number(s.replace(/[^0-9.-]/g,''));
+  return Number.isFinite(n)?Math.max(0,n):0;
+}
+function moeda(v){return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
+
+const U=['','um','dois','três','quatro','cinco','seis','sete','oito','nove'];
+const A=['dez','onze','doze','treze','quatorze','quinze','dezesseis','dezessete','dezoito','dezenove'];
+const D=['','','vinte','trinta','quarenta','cinquenta','sessenta','setenta','oitenta','noventa'];
+const C=['','cento','duzentos','trezentos','quatrocentos','quinhentos','seiscentos','setecentos','oitocentos','novecentos'];
+function ate999(n){
+  if(n===0)return '';
+  if(n===100)return 'cem';
+  const p=[]; const c=Math.floor(n/100); const r=n%100;
+  if(c)p.push(C[c]);
+  if(r>=10&&r<20)p.push(A[r-10]);
+  else { const d=Math.floor(r/10),u=r%10; if(d)p.push(D[d]); if(u)p.push(U[u]); }
+  return p.join(' e ');
+}
+function inteiroExt(n){
+  if(n===0)return 'zero';
+  const p=[];
+  const grupos=[[1000000000,'bilhão','bilhões'],[1000000,'milhão','milhões'],[1000,'mil','mil']];
+  for(const g of grupos){
+    const q=Math.floor(n/g[0]);
+    if(q){
+      let t;
+      if(g[0]===1000)t=q===1?'mil':inteiroExt(q)+' mil';
+      else t=q===1?'um '+g[1]:inteiroExt(q)+' '+g[2];
+      p.push(t); n%=g[0];
+    }
+  }
+  if(n)p.push(ate999(n));
+  return p.join(' e ');
+}
+function valorExtenso(v){
+  const total=Math.round(v*100), reais=Math.floor(total/100), cent=total%100, p=[];
+  if(reais){
+    const de=(reais>=1000000&&reais%1000000===0)?' de':'';
+    p.push(inteiroExt(reais)+de+(reais===1?' real':' reais'));
+  }
+  if(cent)p.push(inteiroExt(cent)+(cent===1?' centavo':' centavos'));
+  return p.length?p.join(' e '):'zero reais';
+}
+function pagamento(){
+  return document.querySelector('input[name="pagamento"]:checked')?.value || 'PIX';
+}
+function atualizarExtenso(){
+  extensoEl.textContent=valorExtenso(parseValorBR(valorEl.value));
+}
+
+function roundRect(ctx,x,y,w,h,r,fill=true,stroke=false){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
+  if(fill)ctx.fill(); if(stroke)ctx.stroke();
+}
+function wrapText(ctx,text,x,y,maxWidth,lineHeight){
+  const words=String(text).split(/\s+/); let line=''; const lines=[];
+  for(const word of words){
+    const test=line?line+' '+word:word;
+    if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word}else line=test;
+  }
+  if(line)lines.push(line);
+  lines.forEach((l,i)=>ctx.fillText(l,x,y+i*lineHeight));
+  return y+lines.length*lineHeight;
+}
+function loadImage(src){
+  return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=reject;img.src=src;});
+}
+
+async function montarPDF(){
+  const W=1600,H=2263;
+  const canvas=document.createElement('canvas'); canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+
+  const bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#eef9ff'); bg.addColorStop(.52,'#e6f5ff'); bg.addColorStop(1,'#f8fcff');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+  ctx.fillStyle='rgba(49,154,210,.08)'; ctx.beginPath();ctx.arc(W-30,H-50,220,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.40)';ctx.beginPath();ctx.arc(70,390,150,0,Math.PI*2);ctx.fill();
+
+  const header=ctx.createLinearGradient(50,0,W-50,0);
+  header.addColorStop(0,'#d8f1ff'); header.addColorStop(1,'#f0faff');
+  ctx.fillStyle=header; roundRect(ctx,55,55,W-110,260,28,true,false);
+  ctx.strokeStyle='#bfdfef';ctx.lineWidth=2;roundRect(ctx,55,55,W-110,260,28,false,true);
+
+  try{
+    const logo=await loadImage('assets/logo-hora-saude.png');
+    const maxW=360,maxH=190,scale=Math.min(maxW/logo.width,maxH/logo.height);
+    const lw=logo.width*scale,lh=logo.height*scale;
+    ctx.drawImage(logo,(W-lw)/2,90,lw,lh);
+  }catch(e){console.error(e)}
+
+  ctx.textAlign='center';ctx.fillStyle='#184f7d';ctx.font='900 74px Arial';ctx.fillText('RECIBO',W/2,420);
+  ctx.strokeStyle='#7bb8db';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(210,455);ctx.lineTo(W-210,455);ctx.stroke();
+
+  const v=parseValorBR(valorEl.value);
+  ctx.fillStyle='rgba(255,255,255,.85)';ctx.strokeStyle='#77badd';ctx.lineWidth=2;
+  roundRect(ctx,W-520,520,390,102,16,true,true);
+  ctx.textAlign='right';ctx.fillStyle='#174f78';ctx.font='900 48px Arial';ctx.fillText(moeda(v),W-165,588);
+
+  ctx.textAlign='left';ctx.fillStyle='#23465e';ctx.font='39px Georgia';
+  let y=735;
+  y=wrapText(ctx,'Recebi de '+(nomeEl.value.trim()||'____________________________')+' a importância de '+moeda(v)+' ('+valorExtenso(v)+').',135,y,W-270,62)+40;
+  y=wrapText(ctx,'Referente a: '+(referenteEl.value.trim()||'________________________________________')+'.',135,y,W-270,62)+40;
+  ctx.fillText('Forma de pagamento: '+pagamento()+'.',135,y); y+=90;
+  ctx.fillText('Data: '+dataBR(dataEl.value)+'.',135,y);
+
+  ctx.textAlign='center';ctx.font='28px Arial';ctx.fillStyle='#4f7f9f';ctx.fillText('Hora Saúde • Documento gerado digitalmente',W/2,H-150);
+
+  const jpeg=canvas.toDataURL('image/jpeg',.97);
+  const bin=atob(jpeg.split(',')[1]);
+  const imgBytes=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)imgBytes[i]=bin.charCodeAt(i);
+
+  const enc=new TextEncoder(),parts=[];let offset=0;const pos=[0];
+  const add=t=>{const b=enc.encode(t);parts.push(b);offset+=b.length};
+  const addBytes=b=>{parts.push(b);offset+=b.length};
+  add(`%PDF-1.4\n`);
+  pos[1]=offset;add(`1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n`);
+  pos[2]=offset;add(`2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n`);
+  pos[3]=offset;add(`3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>\nendobj\n`);
+  pos[4]=offset;add(`4 0 obj\n<< /Type /XObject /Subtype /Image /Width ${W} /Height ${H} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imgBytes.length} >>\nstream\n`);
+  addBytes(imgBytes);add(`\nendstream\nendobj\n`);
+  const content=`q\n595.28 0 0 841.89 0 0 cm\n/Im0 Do\nQ\n`;
+  pos[5]=offset;add(`5 0 obj\n<< /Length ${content.length} >>\nstream\n${content}endstream\nendobj\n`);
+  const xref=offset;add(`xref\n0 6\n0000000000 65535 f \n`);
+  for(let i=1;i<=5;i++)add(String(pos[i]).padStart(10,'0')+` 00000 n \n`);
+  add(`trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
+  return new Blob(parts,{type:'application/pdf'});
+}
+
+async function gerarPDF(){
+  if(!nomeEl.value.trim()){nomeEl.focus();statusEl.textContent='Preencha o nome da pessoa.';return}
+  const v=parseValorBR(valorEl.value);
+  if(v<=0){valorEl.focus();statusEl.textContent='Informe um valor maior que zero.';return}
+
+  // A nova página é aberta imediatamente para o Safari do iPhone não bloquear o popup.
+  const nova=window.open('','_blank');
+  if(!nova){statusEl.textContent='Permita abrir uma nova página no Safari.';return}
+  nova.document.write(`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gerando recibo...</title><style>body{margin:0;background:#eef8ff;font-family:-apple-system,BlinkMacSystemFont,Arial;color:#194a70;display:grid;place-items:center;height:100vh;text-align:center}.box{padding:30px}.spin{width:38px;height:38px;border:4px solid #c5e7f8;border-top-color:#1d6ca6;border-radius:50%;margin:0 auto 16px;animation:r .8s linear infinite}@keyframes r{to{transform:rotate(360deg)}}</style></head><body><div class="box"><div class="spin"></div><strong>Gerando PDF...</strong><div style="font-size:13px;margin-top:8px">O recibo abrirá nesta página.</div></div></body></html>`);
+  nova.document.close();
+
+  statusEl.textContent='Gerando PDF...';
+  try{
+    const pdf=await montarPDF();
+    const url=URL.createObjectURL(pdf);
+    nova.location.replace(url);
+    statusEl.textContent='PDF gerado.';
+    setTimeout(()=>statusEl.textContent='',2200);
+    setTimeout(()=>URL.revokeObjectURL(url),120000);
+  }catch(e){
+    console.error(e);nova.close();statusEl.textContent='Não foi possível gerar o PDF.';
+  }
+}
+
+valorEl.addEventListener('input',atualizarExtenso);
+valorEl.addEventListener('blur',()=>{
+  if(valorEl.value.trim())valorEl.value=parseValorBR(valorEl.value).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  atualizarExtenso();
+});
+$('gerarPdf').addEventListener('click',gerarPDF);
+$('limpar').addEventListener('click',()=>{
+  if(!confirm('Limpar os dados do recibo?'))return;
+  nomeEl.value='';valorEl.value='';referenteEl.value='';dataEl.value=hojeISO();$('pagPix').checked=true;atualizarExtenso();statusEl.textContent='';
+});
+
+dataEl.value=hojeISO();atualizarExtenso();
+
+const standalone=window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+if(standalone)$('installHelp').classList.add('hidden');
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(console.error));
+}
+</script>
+</body>
+</html>

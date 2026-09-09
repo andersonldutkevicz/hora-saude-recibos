@@ -1,0 +1,33 @@
+HORA SAÚDE - RECIBOS
+====================
+
+Este pacote é um PWA (aplicativo web instalável) feito para iPhone.
+
+IMPORTANTE
+---------
+Para o iPhone oferecer "Adicionar à Tela de Início" como aplicativo e para o modo offline funcionar corretamente, estes arquivos precisam estar publicados em um endereço HTTPS.
+
+COMO INSTALAR NO IPHONE
+-----------------------
+1. Publique esta pasta inteira em um site HTTPS.
+2. Abra o endereço no SAFARI do iPhone.
+3. Toque no botão Compartilhar (quadrado com seta para cima).
+4. Toque em "Adicionar à Tela de Início".
+5. Confirme "Adicionar".
+6. O ícone Hora Saúde aparecerá na tela inicial.
+
+COMO USAR
+---------
+1. Abra o app Hora Saúde - Recibos.
+2. Preencha data, nome, valor, referente e forma de pagamento.
+3. Toque em "Gerar PDF".
+4. O PDF pronto abre em uma nova página.
+5. No visualizador do iPhone, toque em Compartilhar e escolha WhatsApp.
+
+ARQUIVOS
+--------
+index.html             aplicativo
+manifest.webmanifest   dados para instalação
+sw.js                  funcionamento offline
+assets/                 logo em alta qualidade
+icons/                  ícones do aplicativo
